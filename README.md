@@ -19,47 +19,45 @@ Simply add the following scripts in your website header:
 ```javascript
 var app = new App();
 
-        $(document).ready(function () {
-            
+$(document).ready(function () {
+    var components = [
+        { key:'navbar', tag: 'x-navbar', templateUrl: 'partials/navbar.html', eagerLoad: true, dataUrl: null },
+        { key:'maptest', tag: 'x-maptest', templateUrl: 'partials/maptest.html', eagerLoad: false, dataUrl: null, 
+            scripts : [
+                    {url: 'http://code.highcharts.com/maps/highmaps.js', postLoad: false, unload: false},
+                    {url: 'http://code.highcharts.com/mapdata/countries/us/us-all.js', postLoad: false, unload: false},
+                    {url: 'partials/maptest.js', postLoad: true, unload: true}
+                ] 
+        }
+    ];                    
 
-            var components = [
-                { key:'navbar', tag: 'x-navbar', templateUrl: 'partials/navbar.html', eagerLoad: true, dataUrl: null },
-                { key:'maptest', tag: 'x-maptest', templateUrl: 'partials/maptest.html', eagerLoad: false, dataUrl: null, 
-                    scripts : [
-                            {url: 'http://code.highcharts.com/maps/highmaps.js', postLoad: false, unload: false},
-                            {url: 'http://code.highcharts.com/mapdata/countries/us/us-all.js', postLoad: false, unload: false},
-                            {url: 'partials/maptest.js', postLoad: true, unload: true}
-                        ] 
-                }
-            ];                    
-            
-            app.onInit = function () {
-               console.log('app.onInit = function() called');
-               app.load([
-                    'qtx-navbar'
-                    ]);
-                console.log('app.load([]) = function() called');
-            };
+    app.onInit = function () {
+       console.log('app.onInit = function() called');
+       app.load([
+            'qtx-navbar'
+            ]);
+        console.log('app.load([]) = function() called');
+    };
 
-            app.onLoaded = function () { 
-                applyJsBehaviors(); // apply templateJsBehaviors   
-                console.log('app.onLoaded = function() called');
-            }; 
+    app.onLoaded = function () { 
+        applyJsBehaviors(); // apply templateJsBehaviors   
+        console.log('app.onLoaded = function() called');
+    }; 
 
-            app.onPreLoad = function(){
-                applyJsBehaviors(); // apply templateJsBehaviors   
-                console.log('app.onPreLoad = function() called');
-            }
+    app.onPreLoad = function(){
+        applyJsBehaviors(); // apply templateJsBehaviors   
+        console.log('app.onPreLoad = function() called');
+    }
 
-            app.onUnloaded = function(){
-                //applyJsBehaviors(); // apply templateJsBehaviors   
-                console.log('app.onUnloaded = function() called');
-            }
+    app.onUnloaded = function(){
+        //applyJsBehaviors(); // apply templateJsBehaviors   
+        console.log('app.onUnloaded = function() called');
+    }
 
-            // convert json data array into component objects
-            var bootstrapper = new Bootstrapper(components);
-            bootstrapper.init(app);
-        });
+    // convert json data array into component objects
+    var bootstrapper = new Bootstrapper(components);
+    bootstrapper.init(app);
+});
 ```
 
 #HTML
