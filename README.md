@@ -36,7 +36,7 @@ $(document).ready(function () {
        console.log('app.onInit = function() called');
        app.load([
             'navbar',
-            'custom_compnent',
+            'custom_component',
             'maptest'
             ]);
         console.log('app.load([]) = function() called');
