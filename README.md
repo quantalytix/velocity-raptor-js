@@ -35,7 +35,9 @@ $(document).ready(function () {
     app.onInit = function () {
        console.log('app.onInit = function() called');
        app.load([
-            'qtx-navbar'
+            'navbar',
+            'custom_compnent',
+            'maptest'
             ]);
         console.log('app.load([]) = function() called');
     };
