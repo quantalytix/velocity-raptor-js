@@ -9,13 +9,13 @@ A lightweight framework for modular website development for single page applicat
 
 Simply add the following scripts in your website header:
 
-### js header libraries
+### Javascript Includes
 ```html
 <script src="js/velocity-raptor-app.js"></script>
 <script src="js/velocity-raptor-loader.js"></script>
 ```
 
-### js main method or pageload
+### Framework Initialization
 ```javascript
 var app = new App();
 
@@ -61,7 +61,7 @@ $(document).ready(function () {
 });
 ```
 
-### HTML Snippets
+### HTML References
 You can use custom tags or specify by element name. Examples to follow.
 
 ```html
