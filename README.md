@@ -22,7 +22,7 @@ var app = new App();
 $(document).ready(function () {
     var components = [
         { key:'navbar', tag: 'x-navbar', templateUrl: 'partials/navbar.html', eagerLoad: true, dataUrl: null },
-        { key:'custom_component', targetElement: "#custom-component", templateUrl: 'partials/navbar.html', eagerLoad: true, dataUrl: null },
+        { key:'custom_component', targetElement: "#custom-component", templateUrl: 'partials/custom.html', eagerLoad: true, dataUrl: null },
         { key:'maptest', tag: 'x-maptest', templateUrl: 'partials/maptest.html', eagerLoad: false, dataUrl: null, 
             scripts : [
                     {url: 'http://code.highcharts.com/maps/highmaps.js', postLoad: false, unload: false},
