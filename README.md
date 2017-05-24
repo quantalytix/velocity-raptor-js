@@ -1,5 +1,5 @@
 # velocity-raptor-js
-A lightweight framework for modular website development and remote plugin features. The primary focus is to create a framework that does not need to be "compiled" or hacked into working: velocity-raptor-js is intended to work out of the box with no intermediary steps.
+A lightweight framework for modular website development for single page applications (SPA) that allows for the developers to use remotely hosted components (plugins). The primary focus is to create a framework that does not need to be "compiled" or hacked into working: velocity-raptor-js is intended to work out of the box with no intermediary steps.
 
 ## External dependencies (for now)
 - dustjs
@@ -22,6 +22,7 @@ var app = new App();
 $(document).ready(function () {
     var components = [
         { key:'navbar', tag: 'x-navbar', templateUrl: 'partials/navbar.html', eagerLoad: true, dataUrl: null },
+        { key:'custom_component', targetElement: "#custom-component", templateUrl: 'partials/navbar.html', eagerLoad: true, dataUrl: null },
         { key:'maptest', tag: 'x-maptest', templateUrl: 'partials/maptest.html', eagerLoad: false, dataUrl: null, 
             scripts : [
                     {url: 'http://code.highcharts.com/maps/highmaps.js', postLoad: false, unload: false},
@@ -60,9 +61,12 @@ $(document).ready(function () {
 });
 ```
 
-#HTML
+### HTML Snippets
+You can use custom tags or specify by element name. Examples to follow.
+
 ```html
 <body>
     <x-navbar></x-navbar>
     <x-map></x-map>
+    <div id="custom-component"></div>
 </body>
