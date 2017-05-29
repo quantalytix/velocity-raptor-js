@@ -15,18 +15,39 @@ class App {
 
     constructor() {
         this.scripts = [];
+        console.log(
+            'velocity-raptor-js framework intialized \n' +
+            'copyright 2017 @ christopher aliotta\n' +
+            'version 1.0.0\n' +
+            'https://github.com/Quantalytix/velocity-raptor-js\n\n');
     }
 
     public load(keys: string[]): void {
         this.onPreLoad();
         let ajaxStack: JQueryPromise<any>[] = [];
-        for (let item in keys) {
-            let key: string = keys[item];
-            ajaxStack.push(this.loadComponent(this.findComponent(key)));
+        for (let i = 0, key; i < keys.length, key = keys[i]; i++) {
+            let component: Component = this.findComponent(key);
+            if (component) {
+                if (component.isRendered == null || component.isRendered == false) {
+                    ajaxStack.push(this.loadComponent(component));
+                }
+                else {                    
+                    throw 'Error[1] component with the key value of {key: ' + key
+                    + '} is already rendered. Call the reload method if you wish to refresh the component.';
+                }
+            }
+            else {
+                throw 'Error[0] component with the key value of {key: ' + key + '} not found.';
+            }
         }
         $.when.apply($, ajaxStack).done(() => {
             this.onLoaded();
         });
+    }
+
+    public reload(keys: string[]): void {
+        this.unload(keys);
+        this.load(keys);
     }
 
     public unload(keys: string[]): void {
@@ -66,7 +87,6 @@ class App {
 
     public init(ajaxStack: JQueryPromise<any>[]) {
         $.when.apply($, ajaxStack).done(() => {
-            console.log('this.onInit()');
             this.onInit();
         });
     }
@@ -93,7 +113,7 @@ class App {
 
     private removeComponentScripts(component: Component): void {
         if (component.scripts) {
-            component.scripts.forEach((item) => {                
+            component.scripts.forEach((item) => {
                 if (this.scripts.indexOf(item) != -1) {
                     if (item.unload) {
                         this.removeJS(item.url);
@@ -113,16 +133,23 @@ class App {
     }
 
     private addJS(script: Script): void {
-        this.scripts.push(script);
-        let scriptElement: any = document.createElement('script');
+        if (script) {
+            this.scripts.push(script);
+            let scriptElement: HTMLScriptElement = this.createScriptElement(script);
+            if (script.postLoad == null || script.postLoad == false) {
+                document.head.appendChild(scriptElement);
+            }
+            else {
+                document.body.appendChild(scriptElement);
+            }
+        }
+    }
+
+    private createScriptElement(script: Script): HTMLScriptElement {
+        let scriptElement: HTMLScriptElement = document.createElement('script');
         scriptElement.src = script.url;
-        scriptElement.async = false;
-        if (script.postLoad == null || script.postLoad == false) {
-            document.head.appendChild(scriptElement);
-        }
-        else {
-            document.body.appendChild(scriptElement);
-        }
+        scriptElement.async = script.async;
+        return scriptElement;
     }
 
     private removeJS(src: string) {
@@ -151,20 +178,19 @@ class App {
             dust.loadSource(compiledTemplate);
         }
         dust.render(element.tag, json, (err: any, out: any) => {
-            this.render2(out, element);
-            element.isRendered = true;
+            element.isRendered = this.updateElementHtml(out, element);
             def.resolve();
             console.log(element.tag + ' rendered');
         });
         return def;
     }
 
-    private render2(output: string, component: Component): boolean {
-        if (component.targetElement != null) {
+    private updateElementHtml(output: string, component: Component): boolean {
+        if (component.targetElement) {
             $(component.targetElement).html(output);
             return true;
         }
-        else if (component.tag != null) {
+        else if (component.tag) {
             for (let i = 0; i < document.getElementsByTagName(component.tag).length; i++) {
                 document.getElementsByTagName(component.tag)[i].innerHTML = output;
             }
@@ -187,14 +213,12 @@ class Component {
     template: string;
     json: string;
     scripts: Script[];
-    async: boolean;
     eagerLoad: boolean;
 
     isRendered: boolean;
     isCached: boolean;
 
     constructor() {
-        this.async = true;
         this.eagerLoad = false;
         this.isRendered = false;
         this.isCached = false;
@@ -205,9 +229,11 @@ class Script {
     url: string;
     postLoad: boolean;
     unload: boolean;
+    async: boolean;
 
     constructor() {
         this.postLoad = true;
         this.unload = true;
+        this.async = false;
     }
 }
