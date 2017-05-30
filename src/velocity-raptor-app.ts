@@ -79,8 +79,8 @@ class App {
             return this.render(component.template, component.json, component);
         }
         else {
-            $.when.apply($, this.precache(component)).done(() => {
-                return this.render(component.template, component.json, component);
+            return $.when.apply($, this.precache(component)).done(() => {
+                this.render(component.template, component.json, component);
             });
         }
     }

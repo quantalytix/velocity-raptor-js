@@ -24,7 +24,11 @@ class Router {
 
     public routes: UrlRoute[] = [];
 
-    public add(path: string, callback: (path: string, params: string[]) => {}): void {
+    // psudeo event delegates
+    public onUrlChange: () => void = () => { };
+    public onRoute: (urlRoute: UrlRoute) => void = () => { };
+
+    public add(path: string, callback: (path: string, params: string[]) => void): void {
         this.routes.push(new UrlRoute(path, callback));
     }
 
@@ -49,6 +53,7 @@ class Router {
         if(urlRoute){
             urlRoute.callback(route.path, route.params);
             this.updateUrlLocation(url);
+            this.onRoute(urlRoute);
             return true;
         }
 
@@ -82,9 +87,9 @@ enum RoutingMode {
 
 class UrlRoute {
     public path: string;
-    public callback: (path : string, params: string[]) => {}
+    public callback: (path : string, params: string[]) => void;
 
-    constructor(path: string, callback: (path : string, params: string[]) => {}) {
+    constructor(path: string, callback: (path : string, params: string[]) => void) {
         this.path = path;
         this.callback = callback;
     }
@@ -121,10 +126,9 @@ class RouteParams {
 
 
 /*
-let a = new RouteParams();
-a.parse('#chris?first=one');
-console.log(a.params);
-console.log(a.root);
+let r = new Router();
+r.add('#chris', (path: string, params: string[]) => { console.log('route chris called')});
+r.route(window.location.hash);
 
 let b = new RouteParams();
 b.parse('http://www.test.com/#chris');
@@ -140,5 +144,3 @@ let hash: string = window.location.hash;
 hash = window.location.href.split('#')[1] || '';
 console.log('router.debug: hash = ' + hash);
 */
-
-console.log(window.location.href);
