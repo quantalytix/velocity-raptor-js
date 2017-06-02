@@ -18,7 +18,7 @@ class App {
         console.log(
             'velocity-raptor-js framework intialized \n' +
             'copyright 2017 @ christopher aliotta\n' +
-            'version 1.0.0\n' +
+            'version 1.0.1\n' +
             'https://github.com/Quantalytix/velocity-raptor-js\n\n');
     }
 
@@ -48,6 +48,10 @@ class App {
     public reload(keys: string[]): void {
         this.unload(keys);
         this.load(keys);
+    }
+
+    public refresh(component: Component, json: any): void {        
+        this.render(component.template, json, component);
     }
 
     public unload(keys: string[]): void {
